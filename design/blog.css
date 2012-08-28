@@ -1,3 +1,7 @@
-.BlogStory + .BlogStory {
+.DataList .BlogStory + .BlogStory {
 	margin-top: 1.5em;
+}
+
+body.BlogStory div.Foot.Closed {
+	display: none;
 }

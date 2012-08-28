@@ -19,12 +19,23 @@ class BlogHooks implements Gdn_IPlugin {
 		}
 	}
 
+	public function DiscussionController_BeforeDiscussionRender_Handler($Sender) {
+		$CategoryID = $Sender->CategoryID;
+		$this->_InBlog = ($Sender->CategoryID == C('Blog.CategoryID'));
+		if ($this->_InBlog) {
+			$Sender->CssClass .= ' BlogStory';
+			$Sender->AddCssFile('blog.css', 'blog');
+		}
+	}
+
 	public function CategoriesController_BeforeGetDiscussions_Handler($Sender) {
 		if ($this->_InBlog) {
 			$PerPage =& $Sender->EventArguments['PerPage'];
 			$PerPage = C('Blog.Posts.PerPage', 5);
 		}
 	}
+
+
 
 	public function CategoriesController_BeforeCategoriesRender_Handler($Sender) {
 		if ($this->_InBlog) {
