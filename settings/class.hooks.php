@@ -9,6 +9,13 @@ class BlogHooks implements Gdn_IPlugin {
 		$Menu->AddLink('Site Settings', T('Blog Settings'), 'blog/settings', 'Blog.Settings.Manage', array());
 	}
 
+	public function Base_Render_Before($Sender) {
+		$Session = Gdn::Session();
+		if ($Sender->Menu) {
+			$Sender->Menu->AddLink('Blog', T('Blog'), '/blog/page', FALSE);
+		}
+	}
+
 	public function PageController_BeforeBeginBlog_Handler($Sender) {
 		$this->_InBlog = TRUE;
 	}

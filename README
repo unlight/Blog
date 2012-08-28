@@ -4,12 +4,13 @@ Blog application turns blog from one of the category of forum.
 
 CHANGELOG
 =========
-1.0.1
+1.0.2
 - added pagination
+- added link to top-menu
 
 1.0.0
 - first release
 
 TODO
 ====
-image see PostController_AfterDiscussionFormOptions_Handler
+
