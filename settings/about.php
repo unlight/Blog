@@ -2,7 +2,7 @@
 
 $ApplicationInfo['Blog'] = array(
 	'Description' => 'Converts forum\'s category into blog.',
-	'Version' => '1.0.0',
+	'Version' => '1.0.1',
 	'AllowEnable' => TRUE,
 	'RequiredApplications' => array(
 		'Vanilla' => '>=2.0.18.4'

@@ -4,7 +4,11 @@ Blog application turns blog from one of the category of forum.
 
 CHANGELOG
 =========
+1.0.1
+- added pagination
+
 1.0.0
+- first release
 
 TODO
 ====

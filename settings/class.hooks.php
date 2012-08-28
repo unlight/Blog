@@ -19,6 +19,28 @@ class BlogHooks implements Gdn_IPlugin {
 		}
 	}
 
+	public function CategoriesController_BeforeGetDiscussions_Handler($Sender) {
+		if ($this->_InBlog) {
+			$PerPage =& $Sender->EventArguments['PerPage'];
+			$PerPage = C('Blog.Posts.PerPage', 5);
+		}
+	}
+
+	public function CategoriesController_BeforeCategoriesRender_Handler($Sender) {
+		if ($this->_InBlog) {
+			$CountDiscussions = $Sender->Data('CountDiscussions');
+			$Limit = $Sender->Data('_Limit');
+			$Page =  GetValue(1, $Sender->RequestArgs);
+			list($Offset, $Limit) = OffsetLimit($Page, $Limit);
+			$PagerFactory = new Gdn_PagerFactory();
+			$Pager = $PagerFactory->GetPager('Pager', $Sender);
+			$Pager->ClientID = 'Pager';
+			$Pager->Configure($Offset, $Limit, $CountDiscussions, 'blog/page/%s');
+			PagerModule::Current($Pager);
+		}
+	}
+	
+
 	public function CategoriesController_Render_Before($Sender) {
 		if ($this->_InBlog) {
 			$Sender->CssClass .= ' BlogPage';
