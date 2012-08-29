@@ -5,3 +5,8 @@
 body.BlogStory div.Foot.Closed {
 	display: none;
 }
+
+img.StoryImage {
+	float: left;
+	margin: 2px 5px;
+}

@@ -6,7 +6,7 @@ class BlogHooks implements Gdn_IPlugin {
 
 	public function Base_GetAppSettingsMenuItems_Handler($Sender) {
 		$Menu =& $Sender->EventArguments['SideMenu'];
-		$Menu->AddLink('Site Settings', T('Blog Settings'), 'blog/settings', 'Blog.Settings.Manage', array());
+		$Menu->AddLink('Site Settings', T('Blog Settings'), 'blogsettings', 'Blog.Settings.Manage', array());
 	}
 
 	public function Base_Render_Before($Sender) {
@@ -41,8 +41,6 @@ class BlogHooks implements Gdn_IPlugin {
 			$PerPage = C('Blog.Posts.PerPage', 5);
 		}
 	}
-
-
 
 	public function CategoriesController_BeforeCategoriesRender_Handler($Sender) {
 		if ($this->_InBlog) {
@@ -80,8 +78,24 @@ class BlogHooks implements Gdn_IPlugin {
 	public function CategoriesController_AfterDiscussionContent_Handler($Sender) {
 		if ($this->_InBlog) {
 			$Discussion = $Sender->EventArguments['Discussion'];
-			// Обрезать
-			echo Wrap($Discussion->Body, 'div');
+			$Image = '';
+			if ($Discussion->StoryImage) {
+				// $Image = Thumbnail($Discussion->StoryImage, array(
+				// 	'alt' => $Discussion->Name,
+				// 	'width' => 200,
+				// 	'class' => 'StoryImage'
+				// ));
+				
+				$Image = Img($Discussion->StoryImage, array(
+					'width' => 200,
+					'alt' => $Discussion->Name,
+					'class' => 'StoryImage'
+				));
+			}
+
+			$Body = "{$Image} {$Discussion->Body}";
+			
+			echo Wrap($Body, 'div', array('class' => 'Body Clear ClearFix'));
 		}
 		//d($Sender);
 	}
@@ -118,11 +132,12 @@ class BlogHooks implements Gdn_IPlugin {
 	public function PostController_AfterDiscussionFormOptions_Handler($Sender) {
 		if (in_array($Sender->RequestMethod, array('discussion', 'editdiscussion'))) {
 			echo '<div class="P">';
-			echo $Sender->Form->Label('Story Image', 'StoryImage');
 			if (class_exists('MorfPlugin')) {
+				echo $Sender->Form->Label('Story Image', 'StoryImage');
 				echo $Sender->Form->UploadBox('StoryImage');
 			} else {
-				echo $Sender->Form->Input('StoryImage', 'file');
+				// echo $Sender->Form->Label('Story Image', 'StoryImage');
+				// echo $Sender->Form->Input('StoryImage', 'file');
 			}
 			echo '</div>';
 		}

@@ -1,6 +1,6 @@
 <?php if (!defined('APPLICATION')) exit();
 
-class SettingsController extends BlogController {
+class BlogSettingsController extends BlogController {
 	
 	public $Uses = array('Form');
 	public $AdminView = True;
