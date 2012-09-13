@@ -10,3 +10,6 @@ img.StoryImage {
 	float: left;
 	margin: 2px 5px;
 }
+
+.Clear:before, .Clear:after {  content: ""; display: table; }
+.Clear:after { clear:both; }
