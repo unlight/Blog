@@ -4,3 +4,4 @@
 
 $Configuration['Blog']['CategoryID'] = NULL;
 $Configuration['Blog']['Posts']['PerPage'] = 5;
+$Configuration['Blog']['Posts']['CutLength'] = 250;

@@ -73,6 +73,7 @@ class BlogHooks implements Gdn_IPlugin {
 	}
 
 	// public function DiscussionModel_BeforeSaveDiscussion_Handler($DiscussionModel) {
+	// 	$FormValues = $DiscussionModel->EventArguments['FormValues'];
 	// }
 
 	public function CategoriesController_AfterDiscussionContent_Handler($Sender) {
@@ -93,9 +94,13 @@ class BlogHooks implements Gdn_IPlugin {
 				));
 			}
 
-			$Body = "{$Image} {$Discussion->Body}";
+			$MaxLength = C('Blog.Posts.CutLength', 250);
+			$TextBody = $Discussion->Body;
+			if ($MaxLength > 1) $TextBody = SliceString($TextBody, $MaxLength);
+			$HtmlBody = Gdn_Format::Html($TextBody);
+			$Body = $Image . ' ' . $HtmlBody;
 			
-			echo Wrap($Body, 'div', array('class' => 'Body Clear ClearFix'));
+			echo Wrap($Body, 'div', array('class' => 'Body Clear'));
 		}
 		//d($Sender);
 	}
@@ -129,6 +134,13 @@ class BlogHooks implements Gdn_IPlugin {
 		$this->_DiscussionModelBeforeGet($Sender->EventArguments['Wheres']);
 	}
 
+	public function PostController_BeforeDiscussionRender_Handler($Sender) {
+		$this->_InBlog = ($Sender->CategoryID == C('Blog.CategoryID'));
+		if ($this->_InBlog) {
+			//$Sender->AddJsFile('applications/blog/js/post.js');
+		}
+	}
+
 	public function PostController_AfterDiscussionFormOptions_Handler($Sender) {
 		if (in_array($Sender->RequestMethod, array('discussion', 'editdiscussion'))) {
 			echo '<div class="P">';
@@ -136,8 +148,8 @@ class BlogHooks implements Gdn_IPlugin {
 				echo $Sender->Form->Label('Story Image', 'StoryImage');
 				echo $Sender->Form->UploadBox('StoryImage');
 			} else {
-				// echo $Sender->Form->Label('Story Image', 'StoryImage');
-				// echo $Sender->Form->Input('StoryImage', 'file');
+				//echo $Sender->Form->Label('Story Image', 'StoryImage');
+				//echo $Sender->Form->Input('StoryImage', 'file');
 			}
 			echo '</div>';
 		}
