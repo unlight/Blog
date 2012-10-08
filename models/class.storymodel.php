@@ -47,7 +47,7 @@ class StoryModel extends DiscussionModel {
 			$Story = $this->DiscussionModel->SQL
 				->From($this->DiscussionModel->Name)
 				->Where('Name', $Values['Name'])
-				->Where('DateInserted', $Values['DateInserted'])
+				//->Where('DateInserted', $Values['DateInserted'])
 				->Limit(1)
 				->Get()
 				->FirstRow();
