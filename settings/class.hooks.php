@@ -20,12 +20,6 @@ class BlogHooks implements Gdn_IPlugin {
 		$this->_InBlog = TRUE;
 	}
 
-	protected function _DiscussionModelBeforeGet(&$Where) {
-		if (!$this->_InBlog) {
-			$Where['d.CategoryID <>'] = C('Blog.CategoryID');
-		}
-	}
-
 	public function DiscussionController_BeforeDiscussionRender_Handler($Sender) {
 		$CategoryID = $Sender->CategoryID;
 		$this->_InBlog = ($Sender->CategoryID == C('Blog.CategoryID'));
@@ -73,6 +67,7 @@ class BlogHooks implements Gdn_IPlugin {
 	}
 
 	// public function DiscussionModel_BeforeSaveDiscussion_Handler($DiscussionModel) {
+	// 	$FormValues = $DiscussionModel->EventArguments['FormValues'];
 	// }
 
 	public function CategoriesController_AfterDiscussionContent_Handler($Sender) {
@@ -93,9 +88,13 @@ class BlogHooks implements Gdn_IPlugin {
 				));
 			}
 
-			$Body = "{$Image} {$Discussion->Body}";
+			$MaxLength = C('Blog.Posts.CutLength', 250);
+			$TextBody = $Discussion->Body;
+			if ($MaxLength > 1) $TextBody = SliceString($TextBody, $MaxLength);
+			$HtmlBody = Gdn_Format::Html($TextBody);
+			$Body = $Image . ' ' . $HtmlBody;
 			
-			echo Wrap($Body, 'div', array('class' => 'Body Clear ClearFix'));
+			echo Wrap($Body, 'div', array('class' => 'Body Clear'));
 		}
 		//d($Sender);
 	}
@@ -121,12 +120,41 @@ class BlogHooks implements Gdn_IPlugin {
 	// 	$Sender->SQL->Where($Where);
 	// }
 
+	// public function LogModel_BeforeRestore_Handler($Sender) {
+	// 	d($Sender->EventArguments);
+	// }
+
+	public function DiscussionController_AfterDiscussionBody_Handler($Sender) {
+		$Discussion = $Sender->EventArguments['Discussion'];
+		$Attributes = $Discussion->Attributes;
+		$SourceUrl = GetValue('SourceUrl', $Attributes);
+		if ($SourceUrl) {
+			echo '<p>Источник: ', Anchor($SourceUrl, $SourceUrl, '', array('rel' => 'nofollow')) . '</p>';
+		}
+	}
+
+	protected function _DiscussionModelBeforeGet(&$Where) {
+		if (!$this->_InBlog) {
+			$Where['d.CategoryID <>'] = C('Blog.CategoryID');
+		} else {
+			//$Where['d.IsPublished'] = 1;
+		}
+	}
+	
 	public function DiscussionModel_BeforeGetCount_Handler($Sender) {
 		$this->_DiscussionModelBeforeGet($Sender->EventArguments['Wheres']);
 	}
 	
 	public function DiscussionModel_BeforeGet_Handler($Sender) {
-		$this->_DiscussionModelBeforeGet($Sender->EventArguments['Wheres']);
+		$Wheres =& $Sender->EventArguments['Wheres'];
+		$this->_DiscussionModelBeforeGet($Wheres);
+	}
+
+	public function PostController_BeforeDiscussionRender_Handler($Sender) {
+		$this->_InBlog = ($Sender->CategoryID == C('Blog.CategoryID'));
+		if ($this->_InBlog) {
+			//$Sender->AddJsFile('applications/blog/js/post.js');
+		}
 	}
 
 	public function PostController_AfterDiscussionFormOptions_Handler($Sender) {
@@ -136,8 +164,8 @@ class BlogHooks implements Gdn_IPlugin {
 				echo $Sender->Form->Label('Story Image', 'StoryImage');
 				echo $Sender->Form->UploadBox('StoryImage');
 			} else {
-				// echo $Sender->Form->Label('Story Image', 'StoryImage');
-				// echo $Sender->Form->Input('StoryImage', 'file');
+				//echo $Sender->Form->Label('Story Image', 'StoryImage');
+				//echo $Sender->Form->Input('StoryImage', 'file');
 			}
 			echo '</div>';
 		}

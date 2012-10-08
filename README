@@ -1,6 +1,10 @@
 BLOG
 ====
-Blog application turns blog from one of the category of forum.
+Application makes one of the categories of the forum like a blog.
+
+REQUIREMENTS
+============
+Event: AfterDiscussionContent
 
 CHANGELOG
 =========
@@ -13,7 +17,6 @@ CHANGELOG
 
 TODO
 ====
-share
-upload without morf
+upload without morf (we cant because ajax post)
 show picture
-cut body
+thumbnail
