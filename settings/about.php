@@ -2,7 +2,7 @@
 
 $ApplicationInfo['Blog'] = array(
 	'Description' => 'Application makes one of the categories of the forum like a blog.',
-	'Version' => '1.0.3',
+	'Version' => '1.0.4',
 	'AllowEnable' => TRUE,
 	'RequiredApplications' => array(
 		'Vanilla' => '>=2.0.18.4'

@@ -20,12 +20,6 @@ class BlogHooks implements Gdn_IPlugin {
 		$this->_InBlog = TRUE;
 	}
 
-	protected function _DiscussionModelBeforeGet(&$Where) {
-		if (!$this->_InBlog) {
-			$Where['d.CategoryID <>'] = C('Blog.CategoryID');
-		}
-	}
-
 	public function DiscussionController_BeforeDiscussionRender_Handler($Sender) {
 		$CategoryID = $Sender->CategoryID;
 		$this->_InBlog = ($Sender->CategoryID == C('Blog.CategoryID'));
@@ -126,12 +120,34 @@ class BlogHooks implements Gdn_IPlugin {
 	// 	$Sender->SQL->Where($Where);
 	// }
 
+	// public function LogModel_BeforeRestore_Handler($Sender) {
+	// 	d($Sender->EventArguments);
+	// }
+
+	public function DiscussionController_AfterDiscussionBody_Handler($Sender) {
+		$Discussion = $Sender->EventArguments['Discussion'];
+		$Attributes = $Discussion->Attributes;
+		$SourceUrl = GetValue('SourceUrl', $Attributes);
+		if ($SourceUrl) {
+			echo '<p>Источник: ', Anchor($SourceUrl, $SourceUrl, '', array('rel' => 'nofollow')) . '</p>';
+		}
+	}
+
+	protected function _DiscussionModelBeforeGet(&$Where) {
+		if (!$this->_InBlog) {
+			$Where['d.CategoryID <>'] = C('Blog.CategoryID');
+		} else {
+			//$Where['d.IsPublished'] = 1;
+		}
+	}
+	
 	public function DiscussionModel_BeforeGetCount_Handler($Sender) {
 		$this->_DiscussionModelBeforeGet($Sender->EventArguments['Wheres']);
 	}
 	
 	public function DiscussionModel_BeforeGet_Handler($Sender) {
-		$this->_DiscussionModelBeforeGet($Sender->EventArguments['Wheres']);
+		$Wheres =& $Sender->EventArguments['Wheres'];
+		$this->_DiscussionModelBeforeGet($Wheres);
 	}
 
 	public function PostController_BeforeDiscussionRender_Handler($Sender) {
