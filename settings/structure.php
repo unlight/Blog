@@ -24,8 +24,6 @@ $PermissionModel->Define(array(
 
 $Construct
 	->Table('Discussion')
-	//->Column('IsStory', 'tinyint(1)', 0)
+	->Column('Name', 'varchar(250)', FALSE, 'fulltext')
 	->Column('StoryImage', 'varchar(250)', NULL)
-	// ->Column('OnReview', 'tinyint(1)', 0)
-	// ->Column('IsPublished', 'tinyint(1)', 1)
 	->Set(FALSE, FALSE);
