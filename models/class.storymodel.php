@@ -61,8 +61,23 @@ class StoryModel extends DiscussionModel {
 		//$TaggingPlugin->DiscussionModel_BeforeSaveDiscussion_Handler($this, $Args);
 		//$RowID = $this->DiscussionModel->Save($Values);
 		$RowID = $this->DiscussionModel->Save($Values);
+		if ($RowID) {
+			if ($IsInsert) {
+				$this->SQL
+					->Update($this->DiscussionModel->Name)
+					->Set('DateLastComment', $Values['DateInserted'])
+					->Where('DiscussionID', $RowID)
+					->Put();
+			}
+		}
 		//$TaggingPlugin->DiscussionModel_AfterSaveDiscussion_Handler($this, $Args);
 
 		return $RowID;
+	}
+
+	public function ValidationResults() {
+		if ($this->DiscussionModel) {
+			return $this->DiscussionModel->ValidationResults();
+		}
 	}
 }
