@@ -24,6 +24,6 @@ $PermissionModel->Define(array(
 
 $Construct
 	->Table('Discussion')
-	->Column('Name', 'varchar(250)', FALSE, 'fulltext')
+	//->Column('Name', 'varchar(250)', FALSE, 'fulltext')
 	->Column('StoryImage', 'varchar(250)', NULL)
 	->Set(FALSE, FALSE);
