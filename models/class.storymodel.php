@@ -56,10 +56,6 @@ class StoryModel extends DiscussionModel {
 			}
 		}
 		
-		//$TaggingPlugin = Gdn::PluginManager()->GetPluginInstance('TaggingPlugin');
-		//$Args = array('FormPostValues' => $Values);
-		//$TaggingPlugin->DiscussionModel_BeforeSaveDiscussion_Handler($this, $Args);
-		//$RowID = $this->DiscussionModel->Save($Values);
 		$RowID = $this->DiscussionModel->Save($Values);
 		if ($RowID) {
 			if ($IsInsert) {
